@@ -8,7 +8,7 @@
         import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
         // ✅ Firebase Configuration (Replace with your Firebase Config)
-       // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+     // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyDf_2jFNKE9HIqMrKSP8_1VkhLcRlYD7QM",
   authDomain: "yes-or-not-f59de.firebaseapp.com",
@@ -48,11 +48,32 @@ const firebaseConfig = {
             });
         }
 
-        // ✅ Add Event Listener to "No" Button
+        // ✅ Add Event Listeners
         window.onload = function () {
-            document.getElementById("noButton").addEventListener("click", trackNoClick);
+            document.getElementById("noButton").addEventListener("click", function () {
+                trackNoClick();
+                moveNoButton();
+            });
+
+            document.getElementById("noButton").addEventListener("mouseover", moveNoButton);
         };
+
+        // ✅ Function to Move "No" Button Randomly
+        function moveNoButton() {
+            let noButton = document.getElementById("noButton");
+
+            let maxX = window.innerWidth - noButton.offsetWidth - 50; // Avoid overflow
+            let maxY = window.innerHeight - noButton.offsetHeight - 50;
+
+            let randomX = Math.floor(Math.random() * maxX);
+            let randomY = Math.floor(Math.random() * maxY);
+
+            noButton.style.position = "absolute";
+            noButton.style.left = `${randomX}px`;
+            noButton.style.top = `${randomY}px`;
+        }
     </script>
+
     <style>
         body {
             display: flex;
@@ -62,18 +83,7 @@ const firebaseConfig = {
             height: 100vh;
             background-color: rgb(189, 225, 122);
             margin: 0;
-        }
-
-        #noButton {
-            position: absolute;
-            margin-left: 150px;
-            transition: 0.5s;
-        }
-
-        #yesButton {
-            position: absolute;
-            margin-right: 150px;
-            transition: transform 0.3s ease;
+            overflow: hidden;
         }
 
         .header_text {
@@ -132,6 +142,7 @@ const firebaseConfig = {
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div>
