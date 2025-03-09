@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="./styles.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: rgb(189, 225, 122);
+            margin: 0;
+        }
+
+        #noButton {
+            position: absolute;
+            margin-left: 150px;
+            transition: 0.5s;
+        }
+
+        #yesButton {
+            position: absolute;
+            margin-right: 150px;
+            transition: transform 0.3s ease;
+        }
+
+        .header_text {
+            font-family: 'Nunito';
+            font-size: 40px;
+            font-weight: bold;
+            color: rgb(255, 255, 255);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background-color: #ffffff;
+            color: rgb(233, 48, 48);
+            padding: 15px 32px;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .gif_container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .gif_container img {
+            max-width: 80%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .final_gif {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .final_gif img {
+            max-width: 80%;
+            height: auto;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div>
+            <h1 class="header_text">Do you wanna go out with me?</h1>
+            <h1 class="header_text">Are you free tomorrow?</h1>
+        </div>
+
+        <!-- First GIF (always visible) -->
+        <div class="gif_container">
+            <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDdtZ2JiZDR0a3lvMWF4OG8yc3p6Ymdvd3g2d245amdveDhyYmx6eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif"
+                alt="Cute animated illustration">
+        </div>
+
+        <div class="buttons">
+            <button class="btn" id="yesButton" onclick="showGif()">Yes</button>
+            <button class="btn" id="noButton" onmouseover="moveAndChange()" onclick="moveAndChange()">No</button>
+        </div>
+
+        <!-- Second GIF (hidden until "Yes" is clicked) -->
+        <div class="final_gif" id="finalGif">
+            <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExdzMxZzBicmNmNnEzMXkxZDM1cnBnNHZoc2Q2cGp0YTl4ajNpMmd1YSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/WZklEzvRrAtncnHqnB/giphy.gif"
+                alt="Happy reaction GIF">
+        </div>
+    </div>
+
+    <script>
+        var hoverCount = 0;
+        var maxScale = 3;
+        var minScale = 1;
+        var currentScale = 1;
+
+        function showGif() {
+            document.getElementById("finalGif").style.display = "flex";
+
+            // Hide buttons and text after clicking "Yes"
+            document.querySelector(".buttons").style.display = "none";
+            document.querySelectorAll(".header_text").forEach(el => el.style.display = "none");
+        }
+
+        function moveAndChange() {
+            moveButton();
+            changeText();
+            growYesButton();
+        }
+
+        function moveButton() {
+            var yesButton = document.getElementById('yesButton').getBoundingClientRect();
+            var noButton = document.getElementById('noButton');
+
+            var maxX = window.innerWidth - (yesButton.width + noButton.offsetWidth);
+            var maxY = window.innerHeight - noButton.offsetHeight;
+
+            var x = Math.max(0, Math.min(Math.random() * maxX, maxX));
+            var y = Math.max(0, Math.min(Math.random() * maxY, maxY));
+
+            noButton.style.left = `${x}px`;
+            noButton.style.top = `${y}px`;
+        }
+
+        var noButton = document.getElementById('noButton');
+        var yesButton = document.getElementById('yesButton');
+        var messages = [
+            "Are you sure?", "Really sure?", "Think again!", "Last chance!",
+            "Surely not?", "You might regret this!", "Give it another thought!",
+            "Are you absolutely certain?", "This could be a mistake!", "Have a heart!",
+            "Don't be so cold!", "Change of heart?", "Wouldn't you reconsider?",
+            "Is that your final answer?", "You're breaking my heart"
+        ];
+        var currentIndex = 0;
+
+        function changeText() {
+            if (currentIndex >= messages.length) {
+                currentIndex = 0;
+            }
+            noButton.innerText = messages[currentIndex];
+            currentIndex++;
+        }
+
+        function growYesButton() {
+            if (currentScale < maxScale) {
+                currentScale += 0.5;
+            } else {
+                currentScale = minScale; // Reset size when reaching max
+            }
+            yesButton.style.transform = `scale(${currentScale})`;
+        }
+    </script>
+</body>
+
+</html>
