@@ -1,8 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <link rel="stylesheet" href="./styles.css">
+    <script type="module">
+        // ✅ Import Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+        // ✅ Firebase Configuration (Replace with your Firebase Config)
+       // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDf_2jFNKE9HIqMrKSP8_1VkhLcRlYD7QM",
+  authDomain: "yes-or-not-f59de.firebaseapp.com",
+  databaseURL: "https://yes-or-not-f59de-default-rtdb.firebaseio.com",
+  projectId: "yes-or-not-f59de",
+  storageBucket: "yes-or-not-f59de.firebasestorage.app",
+  messagingSenderId: "332800168611",
+  appId: "1:332800168611:web:b10cfde930833fe2a42516",
+  measurementId: "G-7688VX0SKW"
+};
+
+        // ✅ Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // ✅ Ask for User Name (Only Once)
+        let userName = localStorage.getItem("userName");
+        if (!userName) {
+            userName = prompt("Enter your name:");
+            if (userName) {
+                localStorage.setItem("userName", userName);
+            } else {
+                userName = "Anonymous";
+            }
+        }
+
+        // ✅ Function to Track "No" Clicks in Firebase
+        function trackNoClick() {
+            const userRef = ref(db, "noButtonClicks/" + userName);
+
+            get(userRef).then((snapshot) => {
+                let count = snapshot.exists() ? snapshot.val().count : 0;
+                count++;
+
+                update(userRef, { name: userName, count: count });
+                console.log(`${userName} clicked No ${count} times`);
+            });
+        }
+
+        // ✅ Add Event Listener to "No" Button
+        window.onload = function () {
+            document.getElementById("noButton").addEventListener("click", trackNoClick);
+        };
+    </script>
     <style>
         body {
             display: flex;
@@ -82,7 +132,6 @@
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <div>
@@ -98,7 +147,7 @@
 
         <div class="buttons">
             <button class="btn" id="yesButton" onclick="showGif()">Yes</button>
-            <button class="btn" id="noButton" onmouseover="moveAndChange()" onclick="moveAndChange()">No</button>
+            <button class="btn" id="noButton">No</button>
         </div>
 
         <!-- Second GIF (hidden until "Yes" is clicked) -->
@@ -109,67 +158,11 @@
     </div>
 
     <script>
-        var hoverCount = 0;
-        var maxScale = 3;
-        var minScale = 1;
-        var currentScale = 1;
-
         function showGif() {
             document.getElementById("finalGif").style.display = "flex";
-
-            // Hide buttons and text after clicking "Yes"
             document.querySelector(".buttons").style.display = "none";
             document.querySelectorAll(".header_text").forEach(el => el.style.display = "none");
         }
-
-        function moveAndChange() {
-            moveButton();
-            changeText();
-            growYesButton();
-        }
-
-        function moveButton() {
-            var yesButton = document.getElementById('yesButton').getBoundingClientRect();
-            var noButton = document.getElementById('noButton');
-
-            var maxX = window.innerWidth - (yesButton.width + noButton.offsetWidth);
-            var maxY = window.innerHeight - noButton.offsetHeight;
-
-            var x = Math.max(0, Math.min(Math.random() * maxX, maxX));
-            var y = Math.max(0, Math.min(Math.random() * maxY, maxY));
-
-            noButton.style.left = `${x}px`;
-            noButton.style.top = `${y}px`;
-        }
-
-        var noButton = document.getElementById('noButton');
-        var yesButton = document.getElementById('yesButton');
-        var messages = [
-            "Are you sure?", "Really sure?", "Think again!", "Last chance!",
-            "Surely not?", "You might regret this!", "Give it another thought!",
-            "Are you absolutely certain?", "This could be a mistake!", "Have a heart!",
-            "Don't be so cold!", "Change of heart?", "Wouldn't you reconsider?",
-            "Is that your final answer?", "You're breaking my heart"
-        ];
-        var currentIndex = 0;
-
-        function changeText() {
-            if (currentIndex >= messages.length) {
-                currentIndex = 0;
-            }
-            noButton.innerText = messages[currentIndex];
-            currentIndex++;
-        }
-
-        function growYesButton() {
-            if (currentScale < maxScale) {
-                currentScale += 0.5;
-            } else {
-                currentScale = minScale; // Reset size when reaching max
-            }
-            yesButton.style.transform = `scale(${currentScale})`;
-        }
     </script>
 </body>
-
 </html>
