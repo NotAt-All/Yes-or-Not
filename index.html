@@ -120,6 +120,11 @@
             // Hide buttons and text after clicking "Yes"
             document.querySelector(".buttons").style.display = "none";
             document.querySelectorAll(".header_text").forEach(el => el.style.display = "none");
+
+            // Show pop-up message
+            setTimeout(() => {
+                alert("Thank you, Melina! Don't take it seriously 😜");
+            }, 500);
         }
 
         function moveAndChange() {
